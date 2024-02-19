@@ -36,10 +36,16 @@ MenuSel()
 ### RUNNING CODE ####
 #####################
 
-#Store username in global var
-echo "Please Enter Username"
-read Uname
+# Enter username/password
+echo -n "Username: "
+read uname
 
+echo -n "Password: "
+read pass
+
+# Verify they are correct
+
+# Show menu
 while true;do
 	Menu
 done
