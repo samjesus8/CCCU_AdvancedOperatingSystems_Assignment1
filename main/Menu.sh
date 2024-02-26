@@ -4,9 +4,9 @@
 Menu()
 {
 	echo "\033[37;44mMake your selection or type bye to exit:\033[0m"
-	echo "\033[32m1 for FIFO\033[0m"
-	echo "\033[32m2 for LIFO\033[0m"
-	echo "\033[31mBYE for exit\033[0m"
+	echo "\033[32m1. FIFO\033[0m"
+	echo "\033[32m2. LIFO\033[0m"
+	echo "\033[31mType in BYE to logout & exit the program\033[0m"
 	echo "Please Enter Selection:"
 	read Sel
 	MenuSel $Sel

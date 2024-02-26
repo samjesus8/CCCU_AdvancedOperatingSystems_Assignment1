@@ -1,16 +1,40 @@
 #!/bin/sh
 
+Menu(){
+    echo "Admin Menu"
+    echo "1. Create User"
+    echo "2. Exit"
+    read Selection
+    MenuSelect $Selection
+}
+
+MenuSelect(){
+    uppercase_input=$(echo "$1" | tr '[:lower:]' '[:upper:]')
+
+    case $uppercase_input in
+        1) UserCreate;;
+
+        2) exit;;
+
+        *) echo "Invalid option"
+           sleep 1
+           Menu;;
+    esac
+}
+
 # User Creation
 UserCreate(){
-    local username=$1 # Username to store
-    local PIN=$2
-    password=""
-
-    # Creating user
-    sudo adduser --disabled-password $username
+    # Prompt for username
+    echo "Please enter Username: "
+    read username
 
     # Prompt for password and store it
-    sudo chpasswd
+    echo "Please enter password: "
+    read password
+
+    # Prompt for PIN and store it
+    echo "Please enter PIN: "
+    read PIN
 
     # Check if the file exists, if not, create it
     if [ ! -f "UPP.txt" ]; then
@@ -21,7 +45,6 @@ UserCreate(){
     echo "$username:$password:$PIN" >> "UPP.txt"
 }
 
-# Call the UserCreate function if arguments are passed
-if [ "$1" = "UserCreate" ]; then
-    UserCreate "$2" "$3" "$4"
-fi
+while true; do
+    Menu
+done
