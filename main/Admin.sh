@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 Menu(){
     echo "Admin Menu"
@@ -47,7 +47,7 @@ UserCreate(){
             # Prompt for PIN and store it
             echo "Please enter PIN: "
             read PIN
-            
+
             if [[ $PIN =~ ^[0-9]{3}$ ]]; then
                 echo "PIN length is 3."
                 break
@@ -65,7 +65,7 @@ UserCreate(){
     fi
 
     # Append the username, password, and PIN to the file
-    echo "$username:$password:$PIN" >> "UPP.txt"
+    echo "$username:$password:$PIN:user" >> "UPP.txt"
 }
 
 while true; do

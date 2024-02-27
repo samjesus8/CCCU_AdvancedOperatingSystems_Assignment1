@@ -1,1 +1,3 @@
-test123:12345:123
+admin:CCCU1:545:admin
+test123:12345:123:user
+test1234:pass1:321:user
