@@ -3,7 +3,9 @@
 Menu(){
     echo "Admin Menu"
     echo "1. Create User"
-    echo "2. Exit"
+    echo "2. Delete User"
+    echo "3. Modify User"
+    echo "4. Exit"
     read Selection
     MenuSelect $Selection
 }
@@ -14,7 +16,7 @@ MenuSelect(){
     case $uppercase_input in
         1) UserCreate;;
 
-        2) exit;;
+        4) exit;;
 
         *) echo "Invalid option"
            sleep 1
@@ -66,6 +68,10 @@ UserCreate(){
 
     # Append the username, password, and PIN to the file
     echo "$username:$password:$PIN:user" >> "UPP.txt"
+}
+
+ChangePassword(){
+    echo "Change Password"
 }
 
 while true; do

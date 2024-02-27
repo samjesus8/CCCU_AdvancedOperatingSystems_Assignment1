@@ -2,15 +2,23 @@
 
 # Menu Display & Select
 Menu() {
-    echo -e "\033[37;44mMake your selection or type bye to exit:\033[0m"
+    echo -e "\033[33mMain Menu\033[0m"
+    echo "========================================="
     echo -e "\033[32m1. FIFO\033[0m"
     echo -e "\033[32m2. LIFO\033[0m"
 
 	# For Admin Users only
     if [ "$usertype" = "admin" ]; then
-        echo -e "\033[33m3. Admin Menu\033[0m"
+        echo -e "\033[32m3. Admin Menu\033[0m"
+        echo -e "\033[32m4. Change Password\033[0m"
     fi
 
+    # Display option 3 for regular users
+    if [ "$usertype" = "user" ]; then
+        echo -e "\033[32m3. Change Password\033[0m"
+    fi
+
+    echo "========================================="
     echo -e "\033[31mType in BYE to logout & exit the program\033[0m"
     echo "Please Enter Selection:"
     read Sel
@@ -30,17 +38,35 @@ MenuSel() {
         3) if [ "$usertype" = "admin" ]; then
                sh Admin.sh
            else
-               echo "Invalid Selection"
+               echo
            fi
+
+            if [ "$usertype" = "user" ]; then
+                UserChangePassword
+            else
+                echo
+            fi
            ;;
         
-        BYE) exit;;
+        BYE) loading_animation "exit" &  # Run the loading animation in the background
+                loading_pid=$!       # Save the PID of the loading animation process
+                sleep 3              # Simulate loading for 3 seconds
+
+                # Stop the loading animation
+                kill $loading_pid    # Stop the loading animation process
+                wait $loading_pid 2>/dev/null # Suppress error message if the process has already finished
+                exit
+                ;;
 
         *) echo "Invalid Selection"
         
         sleep 1
         Menu;;
     esac
+}
+
+UserChangePassword(){
+    echo "Change Password"
 }
 
 Verify_Credentials() {
@@ -66,9 +92,29 @@ Verify_Credentials() {
     return 2  # Username not found
 }
 
-#####################
-### RUNNING CODE ####
-#####################
+loading_animation() {
+    local type=$1
+    local chars="/-\|"
+    local delay=0.1
+    local i=0
+
+    while true; do
+        if [ "$type" = "load" ]; then
+            printf "\rLoading... %c" "${chars:$i:1}"
+        fi
+
+        if [ "$type" = "exit" ]; then
+            printf "\rShutting Down... %c" "${chars:$i:1}"
+        fi
+
+        sleep $delay
+        ((i = (i + 1) % ${#chars}))
+    done
+}
+
+# ==========================
+# = PROGRAM STARTING POINT =
+# ==========================
 
 # Verify Credentials
 while true; do
@@ -84,7 +130,7 @@ while true; do
 
     # Verify Credentials
     Verify_Credentials "$uname" "$pass"
-    
+
     # If successful login, set usertype and show menu
     if [ $? -eq 0 ]; then
         while IFS=: read -r username password pin usertype _; do
@@ -93,6 +139,18 @@ while true; do
                 break
             fi
         done < "UPP.txt"
+
+        loading_animation "load" &  # Run the loading animation in the background
+        loading_pid=$!       # Save the PID of the loading animation process
+        sleep 3              # Simulate loading for 3 seconds
+
+        # Stop the loading animation
+        kill $loading_pid    # Stop the loading animation process
+        wait $loading_pid 2>/dev/null # Suppress error message if the process has already finished
+
+        # Clear screen before showing menu
+        clear
+
         Menu
         break
     fi
