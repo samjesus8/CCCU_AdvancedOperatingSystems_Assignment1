@@ -70,26 +70,7 @@ UserChangePassword(){
 }
 
 Verify_Credentials() {
-    local uname=$1
-    local pass=$2
-
-    # Read UPP.txt line by line
-    while IFS=: read -r username password pin usertype _; do
-        # Check if the provided username matches the one in the file
-        if [ "$uname" = "$username" ]; then
-            # Check if the provided password matches the one in the file
-            if [ "$pass" = "$password" ]; then
-                echo "Login successful!"
-                return 0  # Successful login
-            else
-                echo "Incorrect password!"
-                return 1  # Incorrect password
-            fi
-        fi
-    done < "UPP.txt"
-
-    echo "Username not found!"
-    return 2  # Username not found
+    grep -q "^$uname:$pass:" UPP.txt
 }
 
 loading_animation() {
@@ -124,17 +105,24 @@ while true; do
 
     # Enter Password
     echo -n "Password: "
-    read pass
+    read -s pass
 
     echo
 
     # Verify Credentials
-    Verify_Credentials "$uname" "$pass"
+    Verify_Credentials
+
+    if Verify_Credentials; then
+        echo "Login Success"
+    else
+        echo "Login Failed"
+    fi
 
     # If successful login, set usertype and show menu
     if [ $? -eq 0 ]; then
         while IFS=: read -r username password pin usertype _; do
             if [ "$uname" = "$username" ]; then
+                echo "User type set to: $usertype"
                 usertype="$usertype"
                 break
             fi
