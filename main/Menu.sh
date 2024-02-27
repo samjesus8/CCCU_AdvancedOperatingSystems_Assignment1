@@ -31,21 +31,51 @@ MenuSel()
 	esac
 }
 
+Verify_Credentials(){
+	local uname=$1
+    local pass=$2
+
+    # Read UPP.txt line by line
+    while IFS=: read -r username password _; do
+        # Check if the provided username matches the one in the file
+        if [ "$uname" = "$username" ]; then
+            # Check if the provided password matches the one in the file
+            if [ "$pass" = "$password" ]; then
+                echo "Login successful!"
+                return 0  # Successful login
+            else
+                echo "Incorrect password!"
+                return 1  # Incorrect password
+            fi
+        fi
+    done < "UPP.txt"
+
+    echo "Username not found!"
+    return 2  # Username not found
+}
+
 
 #####################
 ### RUNNING CODE ####
 #####################
 
-# Enter username/password
-echo -n "Username: "
-read uname
+while true; do
+    # Enter Username
+    echo -n "Username: "
+    read uname
 
-echo -n "Password: "
-read pass
+    # Enter Password
+    echo -n "Password: "
+    read pass
 
-# Verify they are correct
+    echo
 
-# Show menu
-while true;do
-	Menu
+    # Verify Credentials
+    Verify_Credentials "$uname" "$pass"
+	
+    # If successful login, show menu
+    if [ $? -eq 0 ]; then
+        Menu
+        break
+    fi
 done
