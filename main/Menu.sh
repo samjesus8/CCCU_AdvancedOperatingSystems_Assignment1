@@ -1,5 +1,7 @@
 #!/bin/bash
 
+usertype=""
+
 # Menu Display & Select
 Menu() {
     echo -e "\033[33mMain Menu\033[0m"
@@ -120,10 +122,10 @@ while true; do
 
     # If successful login, set usertype and show menu
     if [ $? -eq 0 ]; then
-        while IFS=: read -r username password pin usertype _; do
+        while IFS=: read -r username password pin user_type _; do
             if [ "$uname" = "$username" ]; then
-                echo "User type set to: $usertype"
-                usertype="$usertype"
+                echo "User type set to: $user_type"
+                usertype="$user_type"
                 break
             fi
         done < "UPP.txt"
