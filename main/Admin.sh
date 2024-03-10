@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 Menu(){
     echo -e "\033[33mAdministrator Menu\033[0m"

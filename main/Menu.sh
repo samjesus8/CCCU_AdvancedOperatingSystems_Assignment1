@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 usertype=""
 
@@ -156,7 +156,7 @@ loading_animation() {
         fi
 
         sleep $delay
-        ((i = (i + 1) % ${#chars}))
+        i=$(( (i + 1) % ${#chars} ))
     done
 }
 
