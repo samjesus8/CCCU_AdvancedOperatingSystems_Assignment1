@@ -1,11 +1,13 @@
 #!/bin/bash
 
 Menu(){
-    echo "Admin Menu"
-    echo "1. Create User"
-    echo "2. Delete User"
-    echo "3. Modify User"
-    echo "4. Exit"
+    echo -e "\033[33mAdministrator Menu\033[0m"
+    echo "========================================="
+    echo -e "\033[32m1. Create User\033[0m"
+    echo -e "\033[32m2. Modify User\033[0m"
+    echo -e "\033[32m2. Delete User\033[0m"
+    echo "========================================="
+    echo -e "\033[31m4. Exit\033[0m"
     read Selection
     MenuSelect $Selection
 }
@@ -16,7 +18,13 @@ MenuSelect(){
     case $uppercase_input in
         1) UserCreate;;
 
-        4) exit;;
+        2) echo "2";;
+
+        3) echo "3";;
+
+        4) echo "Closing..."
+            clear
+            exit;;
 
         *) echo "Invalid option"
            sleep 1
@@ -68,10 +76,6 @@ UserCreate(){
 
     # Append the username, password, and PIN to the file
     echo "$username:$password:$PIN:user" >> "UPP.txt"
-}
-
-ChangePassword(){
-    echo "Change Password"
 }
 
 while true; do

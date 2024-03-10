@@ -38,6 +38,7 @@ MenuSel() {
         
 		# Only execute Admin.sh if the user logged in is an admin
         3) if [ "$usertype" = "admin" ]; then
+               clear
                sh Admin.sh
            else
                echo
@@ -57,6 +58,7 @@ MenuSel() {
                 # Stop the loading animation
                 kill $loading_pid    # Stop the loading animation process
                 wait $loading_pid 2>/dev/null # Suppress error message if the process has already finished
+                clear
                 exit
                 ;;
 
@@ -124,7 +126,6 @@ while true; do
     if [ $? -eq 0 ]; then
         while IFS=: read -r username password pin user_type _; do
             if [ "$uname" = "$username" ]; then
-                echo "User type set to: $user_type"
                 usertype="$user_type"
                 break
             fi
