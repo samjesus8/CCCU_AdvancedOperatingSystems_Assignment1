@@ -60,16 +60,30 @@ MenuSel() {
             fi
             ;;
         
-        BYE) loading_animation "exit" &  # Run the loading animation in the background
-                loading_pid=$!       # Save the PID of the loading animation process
-                sleep 3              # Simulate loading for 3 seconds
+        BYE) while true; do
+                echo "Do you really want to exit??? (Y/n)"
+                read confirmexit
 
-                # Stop the loading animation
-                kill $loading_pid    # Stop the loading animation process
-                wait $loading_pid 2>/dev/null # Suppress error message if the process has already finished
-                clear
-                exit
-                ;;
+                if [ $confirmexit = "Y" ] || [ $confirmexit = "y" ]; then
+                    loading_animation "exit" &  # Run the loading animation in the background
+                    loading_pid=$!       # Save the PID of the loading animation process
+                    sleep 3              # Simulate loading for 3 seconds
+
+                    # Stop the loading animation
+                    kill $loading_pid    # Stop the loading animation process
+                    wait $loading_pid 2>/dev/null # Suppress error message if the process has already finished
+                    clear
+                    exit
+                    break
+                elif [ $confirmexit = "N" ] || [ $confirmexit = "n" ]; then
+                    clear
+                    Menu
+                    break
+                else
+                    echo
+                fi
+            done
+            ;;
 
         *) echo "Invalid Selection"
         
