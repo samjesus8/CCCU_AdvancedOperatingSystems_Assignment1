@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Declare usertype outside of methods because we will be using it for various purposes
 usertype=""
 
 # Menu Display & Select
@@ -22,6 +23,7 @@ Menu() {
 
     echo "========================================="
     echo -e "\033[31mType in BYE to logout & exit the program\033[0m"
+    echo
     echo "Please Enter Selection:"
     read Sel
     MenuSel $Sel
@@ -29,6 +31,7 @@ Menu() {
 
 # Menu case
 MenuSel() {
+    # Convert menu input into ALL uppercase
     uppercase_input=$(echo "$1" | tr '[:lower:]' '[:upper:]')
     
     case $uppercase_input in
@@ -36,7 +39,7 @@ MenuSel() {
         
         2) sh LIFO.sh;;
         
-		# Only execute Admin.sh if the user logged in is an admin
+		# Execute Admin.sh if the user logged, in is an admin
         3) if [ "$usertype" = "admin" ]; then
                clear
                sh Admin.sh
@@ -44,6 +47,7 @@ MenuSel() {
                echo
            fi
 
+            # Otherwise if its a normal user, execute Change Password
             if [ "$usertype" = "user" ]; then
                 clear
                 UserChangePassword
@@ -52,6 +56,7 @@ MenuSel() {
             fi
            ;;
         
+        # Execute Change Password if the user logged in, is an admin
         4) if [ "$usertype" = "admin" ]; then
                 clear
                 UserChangePassword
@@ -64,18 +69,22 @@ MenuSel() {
                 echo "Do you really want to exit??? (Y/n)"
                 read confirmexit
 
+                # Verify if user really wants to exit
                 if [ $confirmexit = "Y" ] || [ $confirmexit = "y" ]; then
-                    loading_animation "exit" &  # Run the loading animation in the background
-                    loading_pid=$!       # Save the PID of the loading animation process
-                    sleep 3              # Simulate loading for 3 seconds
+                    # Play exit loading animation
+                    loading_animation "exit" &
+                    loading_pid=$!
+                    sleep 3
 
-                    # Stop the loading animation
-                    kill $loading_pid    # Stop the loading animation process
-                    wait $loading_pid 2>/dev/null # Suppress error message if the process has already finished
+                    kill $loading_pid
+                    wait $loading_pid 2>/dev/null
+
+                    # Clear screen before shutting down program
                     clear
                     exit
                     break
                 elif [ $confirmexit = "N" ] || [ $confirmexit = "n" ]; then
+                    # If user says no, clear the screen and go back to menu
                     clear
                     Menu
                     break
@@ -137,14 +146,15 @@ UserChangePassword(){
 }
 
 Verify_Credentials() {
+    # Use grep to search UPP.txt quietly for the credentials based on regular expression
     grep -q "^$uname:$pass:" UPP.txt
 }
 
 loading_animation() {
-    local type=$1
-    local chars="/-\|"
-    local delay=0.1
-    local i=0
+    local type=$1 # Input for animation type
+    local chars="/-\|" # Chars for the animation frames
+    local delay=0.1 # Delay between each frame
+    local i=0 # Index for chars
 
     while true; do
         if [ "$type" = "load" ]; then
@@ -156,6 +166,8 @@ loading_animation() {
         fi
 
         sleep $delay
+
+        # Update value of i to next index in char string
         i=$(( (i + 1) % ${#chars} ))
     done
 }
@@ -167,19 +179,17 @@ loading_animation() {
 # Clear terminal before starting program
 clear
 
-# Verify Credentials
 while true; do
-    # Enter Username
+    # Enter Credentials
     echo -n "Username: "
     read uname
 
-    # Enter Password
     echo -n "Password: "
     read -s pass
 
     echo
 
-    # Verify Credentials
+    # Verify the Credentials
     Verify_Credentials
 
     if Verify_Credentials; then
@@ -192,12 +202,13 @@ while true; do
                 fi
             done < "UPP.txt"
 
-            loading_animation "load" &  # Run the loading animation in the background
-            loading_pid=$!       # Save the PID of the loading animation process
-            sleep 3              # Simulate loading for 3 seconds
+            # Play loading animation
+            loading_animation "load" &
+            loading_pid=$!  # Save the PID of the loading animation process
+            sleep 3 # Simulate loading for 3 seconds
 
             # Stop the loading animation
-            kill $loading_pid    # Stop the loading animation process
+            kill $loading_pid   # Stop the loading animation process
             wait $loading_pid 2>/dev/null # Suppress error message if the process has already finished
 
             # Clear screen before showing menu
