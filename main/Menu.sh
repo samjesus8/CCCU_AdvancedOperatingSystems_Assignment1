@@ -35,7 +35,15 @@ MenuSel() {
     uppercase_input=$(echo "$1" | tr '[:lower:]' '[:upper:]')
     
     case $uppercase_input in
-        1) sh FIFO.sh;;
+        1) echo "Starting FIFO simulation..."
+
+            # Clear screen before starting
+            sleep 10
+            clear
+
+            # Execute FIFO.sh
+            sh FIFO.sh
+            ;;
         
         2) sh LIFO.sh;;
         
@@ -99,6 +107,65 @@ MenuSel() {
         sleep 1
         Menu;;
     esac
+}
+
+GenerateSimData(){
+    # Implicit path to the simdata file
+    sim_data_path="$(pwd)/simdata/simdata_$uname.txt"
+
+    # Check if sim-data exists, if not create it
+    if [ ! -f "$sim_data_path" ]; then
+        touch $sim_data_path
+        echo "$sim_data_path dosen't exist. Creating new data-set..."
+
+        for ((i=0; i<10; i++)); do
+            # Generate a random number between 0 and 99
+            random_number=$(printf "B%02d" $((RANDOM % 100)))
+            # Append the random number to the file
+            echo -n "$random_number, " >> "$sim_data_path"
+        done
+
+        echo >> $sim_data_path
+    fi
+
+    # Ask user if they want to modify their sim-data
+    echo -n "Would you like to edit your simdata (Y/n) "
+    read sim_confirmation
+
+    if [ $sim_confirmation = "Y" ] || [ $sim_confirmation = "y" ]; then
+        # Edit the file
+        echo "Editing file: simdata_$uname.txt"
+        echo "Please enter 10 entries from B0 to B99 (separated by comma-spaces):"
+
+        read -p "Data: " entries
+
+        # Validate entries
+        valid_entries=true
+        IFS=', ' read -r -a entry_array <<< "$entries"
+        if [ "${#entry_array[@]}" -ne 10 ]; then
+            valid_entries=false
+        else
+            for entry in "${entry_array[@]}"; do
+                if [[ ! "$entry" =~ ^B[0-9][0-9] ]]; then
+                    valid_entries=false
+                    break
+                fi
+            done
+        fi
+
+        if [ "$valid_entries" = false ]; then
+            echo "Invalid input. Please enter exactly 10 entries from B0 to B99."
+        else
+            echo "$entries" > "$sim_data_path"
+            echo "Entries successfully updated in simdata_$uname.txt"
+        fi
+
+    elif [ $sim_confirmation = "N" ] || [ $sim_confirmation = "n" ]; then
+        echo
+
+    else
+        echo "Please enter 'Y' to change simdata or 'n' to proceed to main menu!!!"
+    fi
 }
 
 UserChangePassword(){
@@ -210,6 +277,9 @@ while true; do
             # Stop the loading animation
             kill $loading_pid   # Stop the loading animation process
             wait $loading_pid 2>/dev/null # Suppress error message if the process has already finished
+
+            # Prompt for simdata changes
+            GenerateSimData
 
             # Clear screen before showing menu
             clear

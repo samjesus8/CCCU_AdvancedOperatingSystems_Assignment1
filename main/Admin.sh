@@ -342,7 +342,6 @@ UserDelete() {
     done
 }
 
-
 while true; do
     Menu
 done
