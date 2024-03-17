@@ -22,10 +22,12 @@ MenuSelect(){
             UserCreate;;
 
         # 2. Modify User
-        2) echo "2";;
+        2) clear
+            UserModify;;
 
         # 3. Delete User
-        3) echo "3";;
+        3) clear
+            UserDelete;;
 
         # Exit program
         4) echo "Closing..."
@@ -44,6 +46,13 @@ UserCreate(){
         echo -n "Please enter Username: "
         read username
         echo
+
+        # Check if username already exists
+        if grep -q "^$username:" UPP.txt; then
+            echo "Username '$username' already exists. Please enter a different username!!!"
+            echo
+            continue
+        fi
         
         while true; do
             # Prompt for password and store it
@@ -62,13 +71,13 @@ UserCreate(){
                     break
                 else
                     echo
-                    echo "Passwords do not match! Please try again."
+                    echo "Passwords do not match! Please try again!!!"
                     echo
                     continue
                 fi              
             else
                 echo
-                echo "Password must be exactly 5 characters long!"
+                echo "Password must be exactly 5 characters long!!!"
                 echo
                 continue
             fi
@@ -88,13 +97,13 @@ UserCreate(){
                     break
                 else
                     echo
-                    echo "PIN numbers do not match! Please try again."
+                    echo "PIN numbers do not match. Please try again!!!"
                     echo
                     continue
                 fi
             else
                 echo
-                echo "PIN must be exactly 3 digits and must contain valid integers!"
+                echo "PIN must be exactly 3 digits and must contain valid integers!!!"
                 echo
                 continue
             fi
@@ -129,6 +138,14 @@ UserCreate(){
     clear
     echo "Successfully created user!!!"
     echo
+}
+
+UserModify(){
+    echo "user modify"
+}
+
+UserDelete(){
+    echo "user delete"
 }
 
 while true; do
