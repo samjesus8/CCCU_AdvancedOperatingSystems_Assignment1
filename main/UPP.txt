@@ -2,5 +2,3 @@ admin:cccu1:545:admin
 test123:13452:123:user
 test1234:pass1:321:user
 dirk123:12345:123:user
-testuser123:12345:123:user
-testuser12345:12345:135:user

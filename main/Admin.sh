@@ -5,7 +5,7 @@ Menu(){
     echo "========================================="
     echo -e "\033[32m1. Create User\033[0m"
     echo -e "\033[32m2. Modify User\033[0m"
-    echo -e "\033[32m2. Delete User\033[0m"
+    echo -e "\033[32m3. Delete User\033[0m"
     echo "========================================="
     echo -e "\033[31m4. Exit\033[0m"
     read Selection
@@ -203,6 +203,7 @@ UserModify() {
                         break
                     done
                     ;;
+
                 2)  while true; do
                         # Prompt for current password
                         echo -n "Enter your current password: "
@@ -245,6 +246,7 @@ UserModify() {
                         fi
                     done
                     ;;
+
                 3)  # Modify PIN
                     echo -n "Enter your current PIN: "
                     read current_pin_input
@@ -280,21 +282,66 @@ UserModify() {
                         fi
                     done
                     ;;
+
                 4)  # Exit
                     sleep 1
                     clear
                     return
                     ;;
+
                 *)  echo "Invalid option. Please try again!!!";;
             esac
         done
     done
 }
 
+UserDelete() {
+    while true; do
+        # Prompt for username to delete
+        echo -n "Enter the username of the user you wish to delete: "
+        read username
+        echo
 
-UserDelete(){
-    echo "user delete"
+        # Check if username exists
+        if ! grep -q "^$username:" UPP.txt; then
+            echo "User '$username' does not exist. Please enter a valid username!!!"
+            continue
+        fi
+
+        # Get user's details
+        user_details=$(grep "^$username:" UPP.txt)
+        current_pin=$(echo "$user_details" | cut -d: -f3)
+
+        # Prompt for PIN
+        echo -n "Enter the PIN for user '$username': "
+        read entered_pin
+        echo
+
+        # Check if entered PIN matches
+        if [ "$entered_pin" != "$current_pin" ]; then
+            echo "Incorrect PIN for user '$username'. Please try again!!!"
+            continue
+        fi
+
+        # Confirm deletion
+        echo -n "Are you sure you want to delete user '$username'? (Y/n)"
+        read confirm_delete
+        echo
+
+        if [ "$confirm_delete" = "Y" ] || [ "$confirm_delete" = "y" ]; then
+            # Delete user from UPP.txt
+            sed -i "/^$username:/d" UPP.txt
+            echo "User '$username' deleted successfully!!!"
+            break
+        elif [ "$confirm_delete" = "N" ] || [ "$confirm_delete" = "n" ]; then
+            echo "User deletion cancelled!!!"
+            break
+        else
+            echo "Invalid input. Please enter 'Y' to confirm deletion or 'n' to cancel."
+        fi
+    done
 }
+
 
 while true; do
     Menu
