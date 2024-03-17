@@ -140,9 +140,157 @@ UserCreate(){
     echo
 }
 
-UserModify(){
-    echo "user modify"
+UserModify() {
+    while true; do
+        # Prompt for username to modify
+        echo -n "Username: "
+        read username
+        echo
+
+        # Check if username exists
+        if ! grep -q "^$username:" UPP.txt; then
+            echo "User '$username' does not exist. Please enter a valid username."
+            continue
+        fi
+
+        # Get user's current details
+        user_details=$(grep "^$username:" UPP.txt)
+        current_password=$(echo "$user_details" | cut -d: -f2)
+        current_pin=$(echo "$user_details" | cut -d: -f3)
+
+        while true; do
+            # Reload User Details
+            user_details=$(grep "^$username:" UPP.txt)
+            current_password=$(echo "$user_details" | cut -d: -f2)
+            current_pin=$(echo "$user_details" | cut -d: -f3)
+
+            # Display options
+            echo "Select property to modify:"
+            echo "1. Username"
+            echo "2. Password"
+            echo "3. PIN"
+            echo "4. Exit"
+            echo
+
+            # Prompt for user's choice
+            read -p "Enter your choice: " choice
+            echo
+
+            case $choice in
+                1)  # Modify username
+                    while true; do
+                        echo -n "Enter your current username: "
+                        read current_username
+                        echo
+
+                        if [ "$current_username" != "$username" ]; then
+                            echo "Incorrect current username. Please try again!!!"
+                            continue
+                        fi
+
+                        echo -n "Enter new username: "
+                        read new_username
+                        echo
+
+                        if grep -q "^$new_username:" UPP.txt; then
+                            echo "Username '$new_username' already exists. Please choose a different username!!!"
+                            continue
+                        fi
+
+                        # Replace username in UPP.txt
+                        sed -i "s/^$username:/$new_username:/" UPP.txt
+                        echo "Username changed successfully!!!"
+                        break
+                    done
+                    ;;
+                2)  while true; do
+                        # Prompt for current password
+                        echo -n "Enter your current password: "
+                        read -s current_password_input
+                        echo
+
+                        # Verify current password
+                        if [ "$current_password_input" != "$current_password" ]; then
+                            echo "Incorrect password!!!"
+                            continue                      
+                        else
+                            break
+                        fi
+                    done
+
+                    while true; do
+                        # Prompt for new password
+                        echo -n "Enter your new password (5 characters long): "
+                        read -s new_password
+                        echo
+
+                        # Check if new password is exactly 5 characters long
+                        if [ ${#new_password} -eq 5 ]; then
+                            # Prompt to confirm new password
+                            echo -n "Confirm your new password: "
+                            read -s confirm_password
+                            echo
+
+                            # Check if new passwords match
+                            if [ "$new_password" = "$confirm_password" ]; then
+                                # Update password in UPP.txt
+                                sed -i "s/^$username:$current_password:/$username:$new_password:/" UPP.txt
+                                echo "Password changed successfully!!!"
+                                break
+                            else
+                                echo "Passwords do not match! Please try again!!!"
+                            fi
+                        else
+                            echo "New password must be exactly 5 characters long. Please try again!!!"
+                        fi
+                    done
+                    ;;
+                3)  # Modify PIN
+                    echo -n "Enter your current PIN: "
+                    read current_pin_input
+                    echo
+
+                    if [ "$current_pin_input" != "$current_pin" ]; then
+                        echo "Incorrect current PIN. Please try again!!!"
+                        continue
+                    fi
+
+                    while true; do
+                        echo -n "Enter new PIN (3 digits): "
+                        read new_pin
+                        echo
+
+                        echo -n "Confirm new PIN: "
+                        read confirm_pin
+                        echo
+
+                        if [ "$new_pin" != "$confirm_pin" ]; then
+                            echo "PINs do not match. Please try again!!!"
+                            continue
+                        fi
+
+                        if [[ $new_pin =~ ^[0-9]{3}$ ]]; then
+                            # Update PIN in UPP.txt
+                            sed -i "s/^$username:$current_password:$current_pin:/$username:$current_password:$new_pin:/" UPP.txt
+                            echo "PIN changed successfully!!!"
+                            break
+                        else
+                            echo "PIN must be exactly 3 digits and must contain valid integers!!!"
+                            continue
+                        fi
+                    done
+                    ;;
+                4)  # Exit
+                    sleep 1
+                    clear
+                    return
+                    ;;
+                *)  echo "Invalid option. Please try again!!!";;
+            esac
+        done
+    done
 }
+
 
 UserDelete(){
     echo "user delete"

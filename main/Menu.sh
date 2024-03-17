@@ -94,7 +94,7 @@ MenuSel() {
             done
             ;;
 
-        *) echo "Invalid Selection"
+        *) echo "Invalid Selection!!!"
         
         sleep 1
         Menu;;
@@ -126,17 +126,17 @@ UserChangePassword(){
                 if [ "$new_password" = "$confirm_password" ]; then
                     # Update password in UPP.txt
                     sed -i "s/^$uname:$current_password:/$uname:$new_password:/" UPP.txt
-                    echo "Password changed successfully!"
+                    echo "Password changed successfully!!!"
                     break
                 else
-                    echo "Passwords do not match! Please try again."
+                    echo "Passwords do not match! Please try again!!!"
                 fi
             else
-                echo "New password must be exactly 5 characters long! Please try again."
+                echo "New password must be exactly 5 characters long. Please try again!!!"
             fi
         done
     else
-        echo "Incorrect password!"
+        echo "Incorrect password!!!"
     fi
 
     # Return to main menu
