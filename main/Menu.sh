@@ -35,17 +35,36 @@ MenuSel() {
     uppercase_input=$(echo "$1" | tr '[:lower:]' '[:upper:]')
     
     case $uppercase_input in
-        1) echo "Starting FIFO simulation..."
+        1) clear
+            echo "Starting FIFO simulation..."
+            echo
 
             # Clear screen before starting
-            sleep 10
+            sleep 5
             clear
 
             # Execute FIFO.sh
-            sh FIFO.sh
+            sh FIFO.sh $uname
+            echo
+
+            # Once execution is finished, return to main menu
+            Menu
             ;;
         
-        2) sh LIFO.sh;;
+        2) clear
+            echo "Starting LIFO simulation..."
+            echo
+        
+            sleep 5
+            clear
+            
+            # Execute LIFO.sh
+            sh LIFO.sh $uname
+            echo
+
+            # Return to menu once execution is finished
+            Menu
+            ;;
         
 		# Execute Admin.sh if the user logged, in is an admin
         3) if [ "$usertype" = "admin" ]; then
@@ -279,11 +298,11 @@ while true; do
             wait $loading_pid 2>/dev/null # Suppress error message if the process has already finished
 
             # Prompt for simdata changes
+            clear
             GenerateSimData
 
             # Clear screen before showing menu
             clear
-
             Menu
             break
         fi
