@@ -29,7 +29,7 @@ MenuSelect(){
         3) clear
             UserDelete;;
 
-        # Exit program
+        # 4. Exit program
         4) echo "Closing..."
             clear
             exit;;
@@ -159,12 +159,11 @@ UserModify() {
         current_pin=$(echo "$user_details" | cut -d: -f3)
 
         while true; do
-            # Reload User Details
+            # Reload user details (whenever modification has been performed)
             user_details=$(grep "^$username:" UPP.txt)
             current_password=$(echo "$user_details" | cut -d: -f2)
             current_pin=$(echo "$user_details" | cut -d: -f3)
 
-            # Display options
             echo "Select property to modify:"
             echo "1. Username"
             echo "2. Password"
@@ -183,15 +182,18 @@ UserModify() {
                         read current_username
                         echo
 
+                        # If existing username dosen't match with user input, ask them for valid username
                         if [ "$current_username" != "$username" ]; then
                             echo "Incorrect current username. Please try again!!!"
                             continue
                         fi
 
+                        # Ask for new username
                         echo -n "Enter new username: "
                         read new_username
                         echo
 
+                        # Check if new username input alerady exists
                         if grep -q "^$new_username:" UPP.txt; then
                             echo "Username '$new_username' already exists. Please choose a different username!!!"
                             continue
@@ -286,6 +288,8 @@ UserModify() {
                 4)  # Exit
                     sleep 1
                     clear
+
+                    # Return to break out of all loops rather than using break function
                     return
                     ;;
 

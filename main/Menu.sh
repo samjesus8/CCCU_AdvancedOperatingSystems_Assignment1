@@ -3,7 +3,6 @@
 # Declare usertype outside of methods because we will be using it for various purposes
 usertype=""
 
-# Menu Display & Select
 Menu() {
     echo -e "\033[33mMain Menu\033[0m"
     echo "========================================="
@@ -16,7 +15,7 @@ Menu() {
         echo -e "\033[32m4. Change Password\033[0m"
     fi
 
-    # Display option 3 for regular users
+    # For Regular Users only
     if [ "$usertype" = "user" ]; then
         echo -e "\033[32m3. Change Password\033[0m"
     fi
@@ -29,12 +28,12 @@ Menu() {
     MenuSel $Sel
 }
 
-# Menu case
 MenuSel() {
     # Convert menu input into ALL uppercase
     uppercase_input=$(echo "$1" | tr '[:lower:]' '[:upper:]')
     
     case $uppercase_input in
+        # 1. FIFO
         1) clear
             echo "Starting FIFO simulation..."
             echo
@@ -50,7 +49,8 @@ MenuSel() {
             # Once execution is finished, return to main menu
             Menu
             ;;
-        
+
+        # 2. LIFO
         2) clear
             echo "Starting LIFO simulation..."
             echo
@@ -92,6 +92,7 @@ MenuSel() {
             fi
             ;;
         
+        # Exit Program
         BYE) while true; do
                 echo "Do you really want to exit??? (Y/n)"
                 read confirmexit
@@ -172,6 +173,7 @@ GenerateSimData(){
             done
         fi
 
+        # Check if there are values other than B0-B99
         if [ "$valid_entries" = false ]; then
             echo "Invalid input. Please enter exactly 10 entries from B0 to B99."
         else
@@ -180,6 +182,7 @@ GenerateSimData(){
         fi
 
     elif [ $sim_confirmation = "N" ] || [ $sim_confirmation = "n" ]; then
+        # Proceed to main menu
         echo
 
     else
