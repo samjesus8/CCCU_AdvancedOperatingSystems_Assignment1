@@ -1,7 +1,16 @@
 ===================================================================
-[2024-03-19 00:49:18] - Menu.sh - admin has logged in
-FIFO Usage: 2 times
+[2024-03-19 01:01:55] - Menu.sh - admin has logged in
+FIFO Usage: 3 times
 LIFO Usage: 1 times
-[2024-03-19 00:49:45] - Menu.sh - admin has logged out
+[2024-03-19 01:02:40] - Menu.sh - admin has logged out
+admin was logged in for 00:00:00
+===================================================================
+
+===================================================================
+[2024-03-19 01:04:05] - Menu.sh - admin has logged in
+FIFO Usage: 1 times
+LIFO Usage: 0 times
+[2024-03-19 01:04:20] - Menu.sh - admin has logged out
+admin was logged in for 00:00:15
 ===================================================================
 

@@ -111,7 +111,7 @@ MenuSel() {
                     wait $loading_pid 2>/dev/null
 
                     # Log overall usage to Usage.txt when logging out
-                    logout_time="[$(date +"%Y-%m-%d %H:%M:%S")] - Menu.sh - $uname has logged out"
+                    logout_time="$(date +"%Y-%m-%d %H:%M:%S")"
                     log
 
                     # Clear screen before shutting down program
@@ -269,11 +269,28 @@ loading_animation() {
 }
 
 log(){
+    # Calculate how long user was logged in for
+    login_timestamp=$(date -d "$login_time" "+%s")
+    logout_timestamp=$(date -d "$logout_time" "+%s")
+
+    # Calculate the difference in seconds
+    difference=$((logout_timestamp - login_timestamp))
+
+    # Convert the difference back to HH:MM:SS format
+    hours=$((difference / 3600))
+    minutes=$(( (difference % 3600) / 60 ))
+    seconds=$((difference % 60))
+
+    # Format the result
+    formatted_time=$(printf "%02d:%02d:%02d" $hours $minutes $seconds)
+
+    # Write log report to Usage.txt
     echo "===================================================================" >> "Usage.txt"
-    echo "$login_time" >> "Usage.txt"
+    echo "[$login_time] - Menu.sh - $uname has logged in" >> "Usage.txt"
     echo "FIFO Usage: $fifo_usage_count times" >> "Usage.txt"
     echo "LIFO Usage: $lifo_usage_count times" >> "Usage.txt"
-    echo "$logout_time" >> "Usage.txt"
+    echo "[$logout_time] - Menu.sh - $uname has logged out" >> "Usage.txt"
+    echo "$uname was logged in for $formatted_time" >> "Usage.txt"
     echo "===================================================================" >> "Usage.txt"
     echo "" >> "Usage.txt"
 }
@@ -331,7 +348,7 @@ while true; do
             GenerateSimData
 
             # Log date/time user logged in
-            login_time="[$(date +"%Y-%m-%d %H:%M:%S")] - Menu.sh - $uname has logged in"
+            login_time="$(date +"%Y-%m-%d %H:%M:%S")"
 
             # Clear screen before showing menu
             clear
