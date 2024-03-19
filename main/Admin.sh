@@ -162,12 +162,14 @@ UserModify() {
         user_details=$(grep "^$username:" UPP.txt)
         current_password=$(echo "$user_details" | cut -d: -f2)
         current_pin=$(echo "$user_details" | cut -d: -f3)
+        current_usertype=$(echo "$user_details" | cut -d: -f4)
 
         while true; do
             # Reload user details (whenever modification has been performed)
             user_details=$(grep "^$username:" UPP.txt)
             current_password=$(echo "$user_details" | cut -d: -f2)
             current_pin=$(echo "$user_details" | cut -d: -f3)
+            current_usertype=$(echo "$user_details" | cut -d: -f4)
 
             echo "Select property to modify:"
             echo "1. Username"
@@ -208,10 +210,8 @@ UserModify() {
                         temp_file=$(mktemp)
 
                         # Replace username in UPP.txt
-                        echo "$user_details" | cut -d: -f1 --complement > "$temp_file"
-                        echo "$new_username:$current_password:$current_pin" >> "$temp_file"
-                        grep -v "^$username:" UPP.txt >> "$temp_file"
-                        mv "$temp_file" UPP.txt
+                        grep -v "^$username:" UPP.txt > UPP_temp.txt && mv UPP_temp.txt UPP.txt
+                        echo "$new_username:$current_password:$current_pin:$current_usertype" >> UPP.txt
 
                         echo "Username changed successfully!!!"
                         break
@@ -252,11 +252,8 @@ UserModify() {
                                 temp_file=$(mktemp)
 
                                 # Replace password in UPP.txt
-                                echo "$user_details" | cut -d: -f2 --complement > "$temp_file"
-                                echo "$username:$new_password:$current_pin" >> "$temp_file"
-                                grep -v "^$username:" UPP.txt >> "$temp_file"
-                                mv "$temp_file" UPP.txt
-
+                                grep -v "^$username:" UPP.txt > UPP_temp.txt && mv UPP_temp.txt UPP.txt
+                                echo "$username:$new_password:$current_pin:$current_usertype" >> UPP.txt
                                 echo "Password changed successfully!!!"
                                 break
                             else
@@ -297,12 +294,8 @@ UserModify() {
                             temp_file=$(mktemp)
 
                             # Replace PIN in UPP.txt
-                            echo "$user_details" | cut -d: -f3 --complement > "$temp_file"
-                            echo
-                            echo "$username:$current_password:$new_pin" >> "$temp_file"
-                            grep -v "^$username:" UPP.txt >> "$temp_file"
-                            mv "$temp_file" UPP.txt
-
+                            grep -v "^$username:" UPP.txt > UPP_temp.txt && mv UPP_temp.txt UPP.txt
+                            echo "$username:$current_password:$new_pin:$current_usertype" >> UPP.txt
                             echo "PIN changed successfully!!!"
                             break
                         else
