@@ -30,3 +30,19 @@ LIFO Usage: 0 times
 dirk123 was logged in for 00:00:10
 ===================================================================
 
+===================================================================
+[2024-03-19 10:00:44] - Menu.sh - admin has logged in
+FIFO Usage: 0 times
+LIFO Usage: 0 times
+[2024-03-19 10:00:51] - Menu.sh - admin has logged out
+admin was logged in for 00:00:07
+===================================================================
+
+===================================================================
+[2024-03-19 10:01:52] - Menu.sh - admin has logged in
+FIFO Usage: 0 times
+LIFO Usage: 0 times
+[2024-03-19 10:01:58] - Menu.sh - admin has logged out
+admin was logged in for 00:00:06
+===================================================================
+
