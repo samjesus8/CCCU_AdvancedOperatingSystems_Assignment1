@@ -144,6 +144,7 @@ GenerateSimData(){
     if [ ! -f "$sim_data_path" ]; then
         touch $sim_data_path
         echo "$sim_data_path dosen't exist. Creating new data-set..."
+        echo
 
         for ((i=0; i<10; i++)); do
             # Generate a random number between 0 and 99

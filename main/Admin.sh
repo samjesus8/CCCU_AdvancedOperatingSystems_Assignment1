@@ -6,8 +6,9 @@ Menu(){
     echo -e "\033[32m1. Create User\033[0m"
     echo -e "\033[32m2. Modify User\033[0m"
     echo -e "\033[32m3. Delete User\033[0m"
+    echo -e "\033[32m4. Statistics\033[0m"
     echo "========================================="
-    echo -e "\033[31m4. Exit\033[0m"
+    echo -e "\033[31m5. Exit\033[0m"
     read Selection
     MenuSelect $Selection
 }
@@ -28,9 +29,12 @@ MenuSelect(){
         # 3. Delete User
         3) clear
             UserDelete;;
+        
+        4) clear
+            echo "";;
 
-        # 4. Exit program
-        4) echo "Closing..."
+        # 5. Exit program
+        5) echo "Closing..."
             clear
             exit;;
 
@@ -346,6 +350,15 @@ UserDelete() {
     done
 }
 
+# ==========================
+# = PROGRAM STARTING POINT =
+# ==========================
+
+# Variables for statistics
+declare -A user_time
+declare -A script_count
+
+# Load menu
 while true; do
     Menu
 done
