@@ -187,7 +187,7 @@ UserModify() {
                         read current_username
                         echo
 
-                        # If existing username dosen't match with user input, ask them for valid username
+                        # If existing username doesn't match with user input, ask them for valid username
                         if [ "$current_username" != "$username" ]; then
                             echo "Incorrect current username. Please try again!!!"
                             continue
@@ -198,14 +198,21 @@ UserModify() {
                         read new_username
                         echo
 
-                        # Check if new username input alerady exists
+                        # Check if new username input already exists
                         if grep -q "^$new_username:" UPP.txt; then
                             echo "Username '$new_username' already exists. Please choose a different username!!!"
                             continue
                         fi
 
+                        # Create a temporary file to store modified contents
+                        temp_file=$(mktemp)
+
                         # Replace username in UPP.txt
-                        sed -i "s/^$username:/$new_username:/" UPP.txt
+                        echo "$user_details" | cut -d: -f1 --complement > "$temp_file"
+                        echo "$new_username:$current_password:$current_pin" >> "$temp_file"
+                        grep -v "^$username:" UPP.txt >> "$temp_file"
+                        mv "$temp_file" UPP.txt
+
                         echo "Username changed successfully!!!"
                         break
                     done
@@ -241,8 +248,15 @@ UserModify() {
 
                             # Check if new passwords match
                             if [ "$new_password" = "$confirm_password" ]; then
-                                # Update password in UPP.txt
-                                sed -i "s/^$username:$current_password:/$username:$new_password:/" UPP.txt
+                                # Create a temporary file to store modified contents
+                                temp_file=$(mktemp)
+
+                                # Replace password in UPP.txt
+                                echo "$user_details" | cut -d: -f2 --complement > "$temp_file"
+                                echo "$username:$new_password:$current_pin" >> "$temp_file"
+                                grep -v "^$username:" UPP.txt >> "$temp_file"
+                                mv "$temp_file" UPP.txt
+
                                 echo "Password changed successfully!!!"
                                 break
                             else
@@ -279,8 +293,16 @@ UserModify() {
                         fi
 
                         if [[ $new_pin =~ ^[0-9]{3}$ ]]; then
-                            # Update PIN in UPP.txt
-                            sed -i "s/^$username:$current_password:$current_pin:/$username:$current_password:$new_pin:/" UPP.txt
+                            # Create a temporary file to store modified contents
+                            temp_file=$(mktemp)
+
+                            # Replace PIN in UPP.txt
+                            echo "$user_details" | cut -d: -f3 --complement > "$temp_file"
+                            echo
+                            echo "$username:$current_password:$new_pin" >> "$temp_file"
+                            grep -v "^$username:" UPP.txt >> "$temp_file"
+                            mv "$temp_file" UPP.txt
+
                             echo "PIN changed successfully!!!"
                             break
                         else
