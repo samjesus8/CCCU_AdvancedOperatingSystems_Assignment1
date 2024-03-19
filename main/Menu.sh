@@ -44,7 +44,7 @@ MenuSel() {
             echo
 
             # Increment usage count by 1
-            ((fifo_usage_count++))
+            fifo_usage_count=$((fifo_usage_count + 1))
 
             # Once execution is finished, return to main menu
             Menu
@@ -63,7 +63,7 @@ MenuSel() {
             echo
 
             # Increment usage count by 1
-            ((lifo_usage_count++))
+            lifo_usage_count=$((lifo_usage_count + 1))
 
             # Return to menu once execution is finished
             Menu
@@ -146,7 +146,7 @@ GenerateSimData(){
         echo "$sim_data_path dosen't exist. Creating new data-set..."
         echo
 
-        for ((i=0; i<10; i++)); do
+        for i in $(seq 1 10); do
             # Generate a random number between 0 and 99
             random_number=$(printf "B%02d" $((RANDOM % 100)))
             # Append the random number to the file
@@ -169,7 +169,7 @@ GenerateSimData(){
 
         # Validate entries
         valid_entries=true
-        IFS=', ' read -r -a entry_array <<< "$entries"
+        echo "$entries" | IFS=', ' read -r -a entry_array
         if [ "${#entry_array[@]}" -ne 10 ]; then
             valid_entries=false
         else
@@ -213,7 +213,7 @@ UserChangePassword(){
             echo
 
             # Check if new password is exactly 5 characters long
-            if [ ${#new_password} -eq 5 ]; then
+            if [ ${#new_password} q 5 ]; then
                 # Prompt to confirm new password
                 echo -n "Confirm your new password: "
                 read -s confirm_password

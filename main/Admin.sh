@@ -1,19 +1,6 @@
 #!/bin/sh
 
-AdminMenu(){
-    echo -e "\033[33mAdministrator Menu\033[0m"
-    echo "========================================="
-    echo -e "\033[32m1. Create User\033[0m"
-    echo -e "\033[32m2. Modify User\033[0m"
-    echo -e "\033[32m3. Delete User\033[0m"
-    echo -e "\033[32m4. Statistics\033[0m"
-    echo "========================================="
-    echo -e "\033[31m5. Exit\033[0m"
-    read Selection
-    MenuSelect $Selection
-}
-
-MenuSelect(){
+MenuSelect() {
     # Convert menu input into ALL uppercase
     uppercase_input=$(echo "$1" | tr '[:lower:]' '[:upper:]')
 
@@ -45,7 +32,21 @@ MenuSelect(){
     esac
 }
 
-UserCreate(){
+AdminMenu() {
+    printf "\033[33mAdministrator Menu\033[0m\n"
+    echo "========================================="
+    printf "\033[32m1. Create User\033[0m\n"
+    printf "\033[32m2. Modify User\033[0m\n"
+    printf "\033[32m3. Delete User\033[0m\n"
+    printf "\033[32m4. Statistics\033[0m\n"
+    echo "========================================="
+    printf "\033[31m5. Exit\033[0m\n"
+    read Selection
+    MenuSelect $Selection
+}
+
+
+UserCreate() {
     while true; do
         # Prompt for username
         echo -n "Please enter Username: "
