@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Declare usertype outside of methods because we will be using it for various purposes
-usertype=""
-
 Menu() {
     echo -e "\033[33mMain Menu\033[0m"
     echo "========================================="
@@ -46,6 +43,9 @@ MenuSel() {
             sh FIFO.sh $uname
             echo
 
+            # Increment usage count by 1
+            ((fifo_usage_count++))
+
             # Once execution is finished, return to main menu
             Menu
             ;;
@@ -61,6 +61,9 @@ MenuSel() {
             # Execute LIFO.sh
             sh LIFO.sh $uname
             echo
+
+            # Increment usage count by 1
+            ((lifo_usage_count++))
 
             # Return to menu once execution is finished
             Menu
@@ -106,6 +109,10 @@ MenuSel() {
 
                     kill $loading_pid
                     wait $loading_pid 2>/dev/null
+
+                    # Log overall usage to Usage.txt when logging out
+                    logout_time="[$(date +"%Y-%m-%d %H:%M:%S")] - Menu.sh - $uname has logged out"
+                    log
 
                     # Clear screen before shutting down program
                     clear
@@ -261,9 +268,28 @@ loading_animation() {
     done
 }
 
+log(){
+    echo "===================================================================" >> "Usage.txt"
+    echo "$login_time" >> "Usage.txt"
+    echo "FIFO Usage: $fifo_usage_count times" >> "Usage.txt"
+    echo "LIFO Usage: $lifo_usage_count times" >> "Usage.txt"
+    echo "$logout_time" >> "Usage.txt"
+    echo "===================================================================" >> "Usage.txt"
+    echo "" >> "Usage.txt"
+}
+
 # ==========================
 # = PROGRAM STARTING POINT =
 # ==========================
+
+# When user logs in, set the usertype
+usertype=""
+
+# Variables for logging
+login_time=""
+logout_time=""
+lifo_usage_count=0
+fifo_usage_count=0
 
 # Clear terminal before starting program
 clear
@@ -303,6 +329,9 @@ while true; do
             # Prompt for simdata changes
             clear
             GenerateSimData
+
+            # Log date/time user logged in
+            login_time="[$(date +"%Y-%m-%d %H:%M:%S")] - Menu.sh - $uname has logged in"
 
             # Clear screen before showing menu
             clear
