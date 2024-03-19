@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Menu(){
+AdminMenu(){
     echo -e "\033[33mAdministrator Menu\033[0m"
     echo "========================================="
     echo -e "\033[32m1. Create User\033[0m"
@@ -31,7 +31,8 @@ MenuSelect(){
             UserDelete;;
         
         4) clear
-            echo "";;
+            sh Admin_Statistics.sh
+            echo;;
 
         # 5. Exit program
         5) echo "Closing..."
@@ -40,7 +41,7 @@ MenuSelect(){
 
         *) echo "Invalid option"
            sleep 1
-           Menu;;
+           AdminMenu;;
     esac
 }
 
@@ -354,11 +355,7 @@ UserDelete() {
 # = PROGRAM STARTING POINT =
 # ==========================
 
-# Variables for statistics
-declare -A user_time
-declare -A script_count
-
 # Load menu
 while true; do
-    Menu
+    AdminMenu
 done
