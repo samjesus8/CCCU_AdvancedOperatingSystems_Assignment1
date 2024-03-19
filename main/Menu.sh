@@ -221,8 +221,15 @@ UserChangePassword(){
 
                 # Check if new passwords match
                 if [ "$new_password" = "$confirm_password" ]; then
+                    # Get existing user details for retention
+                    user_details=$(grep "^$uname:" UPP.txt)
+                    current_pin=$(echo "$user_details" | cut -d: -f3)
+                    current_usertype=$(echo "$user_details" | cut -d: -f4)
+
                     # Update password in UPP.txt
-                    sed -i "s/^$uname:$current_password:/$uname:$new_password:/" UPP.txt
+                    grep -v "^$uname:$current_password:" UPP.txt > UPP_temp.txt && mv UPP_temp.txt UPP.txt
+                    echo "$uname:$new_password:$current_pin:$current_usertype" >> UPP.txt
+
                     echo "Password changed successfully!!!"
                     break
                 else
