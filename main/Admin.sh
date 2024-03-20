@@ -1,21 +1,21 @@
 #!/bin/sh
 
-MenuSelect() {
+Menu_Select() {
     # Convert menu input into ALL uppercase
     uppercase_input=$(echo "$1" | tr '[:lower:]' '[:upper:]')
 
     case $uppercase_input in
         # 1. Create user
         1) clear
-            UserCreate;;
+            User_Create;;
 
         # 2. Modify User
         2) clear
-            UserModify;;
+            User_Modify;;
 
         # 3. Delete User
         3) clear
-            UserDelete;;
+            User_Delete;;
         
         4) clear
             sh Admin_Statistics.sh
@@ -28,11 +28,11 @@ MenuSelect() {
 
         *) echo "Invalid option"
            sleep 1
-           AdminMenu;;
+           Admin_Menu;;
     esac
 }
 
-AdminMenu() {
+Admin_Menu() {
     printf "\033[33mAdministrator Menu\033[0m\n"
     echo "========================================="
     printf "\033[32m1. Create User\033[0m\n"
@@ -42,11 +42,10 @@ AdminMenu() {
     echo "========================================="
     printf "\033[31m5. Exit\033[0m\n"
     read Selection
-    MenuSelect $Selection
+    Menu_Select $Selection
 }
 
-
-UserCreate() {
+User_Create() {
     while true; do
         # Prompt for username
         echo -n "Please enter Username: "
@@ -146,7 +145,7 @@ UserCreate() {
     echo
 }
 
-UserModify() {
+User_Modify() {
     while true; do
         # Prompt for username to modify
         echo -n "Username: "
@@ -320,7 +319,7 @@ UserModify() {
     done
 }
 
-UserDelete() {
+User_Delete() {
     while true; do
         # Prompt for username to delete
         echo -n "Enter the username of the user you wish to delete: "
@@ -373,5 +372,5 @@ UserDelete() {
 
 # Load menu
 while true; do
-    AdminMenu
+    Admin_Menu
 done

@@ -80,7 +80,7 @@ MenuSel() {
             # Otherwise if its a normal user, execute Change Password
             if [ "$usertype" = "user" ]; then
                 clear
-                UserChangePassword
+                User_Change_Password
             else
                 echo
             fi
@@ -89,7 +89,7 @@ MenuSel() {
         # Execute Change Password if the user logged in, is an admin
         4) if [ "$usertype" = "admin" ]; then
                 clear
-                UserChangePassword
+                User_Change_Password
             else
                 echo
             fi
@@ -103,7 +103,7 @@ MenuSel() {
                 # Verify if user really wants to exit
                 if [ $confirmexit = "Y" ] || [ $confirmexit = "y" ]; then
                     # Play exit loading animation
-                    loading_animation "exit" &
+                    Loading_Animation "exit" &
                     loading_pid=$!
                     sleep 3
 
@@ -112,7 +112,7 @@ MenuSel() {
 
                     # Log overall usage to Usage.txt when logging out
                     logout_time="$(date +"%Y-%m-%d %H:%M:%S")"
-                    log
+                    Log
 
                     # Clear screen before shutting down program
                     clear
@@ -136,7 +136,7 @@ MenuSel() {
     esac
 }
 
-GenerateSimData(){
+Generate_Sim_Data(){
     # Implicit path to the simdata file
     sim_data_path="$(pwd)/simdata/simdata_$uname.txt"
 
@@ -198,7 +198,7 @@ GenerateSimData(){
     fi
 }
 
-UserChangePassword(){
+User_Change_Password(){
     # Ask for current password
     echo -n "Enter your current password: "
     read -s current_password
@@ -254,7 +254,7 @@ Verify_Credentials() {
     grep -q "^$uname:$pass:" UPP.txt
 }
 
-loading_animation() {
+Loading_Animation() {
     local type=$1 # Input for animation type
     local chars="/-\|" # Chars for the animation frames
     local delay=0.1 # Delay between each frame
@@ -276,7 +276,7 @@ loading_animation() {
     done
 }
 
-log(){
+Log(){
     # Calculate how long user was logged in for
     login_timestamp=$(date -d "$login_time" "+%s")
     logout_timestamp=$(date -d "$logout_time" "+%s")
@@ -292,7 +292,7 @@ log(){
     # Format the result
     formatted_time=$(printf "%02d:%02d:%02d" $hours $minutes $seconds)
 
-    # Write log report to Usage.txt
+    # Write Log report to Usage.txt
     echo "===================================================================" >> "Usage.txt"
     echo "[$login_time] - Menu.sh - $uname has logged in" >> "Usage.txt"
     echo "FIFO Usage: $fifo_usage_count times" >> "Usage.txt"
@@ -343,7 +343,7 @@ while true; do
             done < "UPP.txt"
 
             # Play loading animation
-            loading_animation "load" &
+            Loading_Animation "load" &
             loading_pid=$!  # Save the PID of the loading animation process
             sleep 3 # Simulate loading for 3 seconds
 
@@ -353,7 +353,7 @@ while true; do
 
             # Prompt for simdata changes
             clear
-            GenerateSimData
+            Generate_Sim_Data
 
             # Log date/time user logged in
             login_time="$(date +"%Y-%m-%d %H:%M:%S")"
