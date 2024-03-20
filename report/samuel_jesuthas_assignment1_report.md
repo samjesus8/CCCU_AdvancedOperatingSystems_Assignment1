@@ -316,15 +316,15 @@ UserCreate() {
 ```
 
 - **Process**:
-    - Admin inputs username, password, and PIN.
-    - Checks if the username already exists in the system.
-    - Validates the password:
+    - Admin inputs username, password, and PIN and is read into variables.
+    - We then check if the username already exists in the system.
+    - Then we validate the password:
         - Must be exactly 5 characters long.
         - Admin confirms the password for security.
-    - Validates the PIN:
+    - Then we validate the PIN:
         - Must be exactly 3 digits long.
         - Must contain only numeric characters.
-    - Admin confirms the details entered.
+    - Finally, the Admin confirms the details entered.
     - If confirmed (Y/n), the user details are stored in UPP.txt.
 
 - **Validation**:
@@ -455,6 +455,8 @@ UserModify() {
     - Similar process to username modification.
     - Admin verifies the current password/PIN.
     - Admin inputs the new password/PIN.
+    - The new password is checked to see if there is 5 characters in them
+    - The new PIN is also checked to see if it is exactly 3 characters long and doesn't contain non-numeric values
     - New password/PIN is validated and updated in UPP.txt.
 
 ### Deleting Users
@@ -543,8 +545,9 @@ done < "$sim_data_path"
 ```
 
 - Checks if the simulation data file exists for the specified user.
-- Reads each line of the file and processes each byte individually, maintaining the order.
-- Outputs the processed byte.
+- I used `pwd` to implicitly specify the file path for the simdata file. This is so it works across systems rather than hardcoding the file path.
+- Then it reads each line of the file and processes each byte individually, maintaining the order.
+- Finally, we can echo this byte out
 
 ### LIFO.sh
 
@@ -571,10 +574,10 @@ for ((i=${#lines[@]}-1; i>=0; i--)); do
 done
 ```
 
-- Checks if the simulation data file exists for the specified user.
+- Same checks for the simdata as FIFO
 - Reads each line of the file and stores them in an array.
 - Processes each line in reverse order, then processes each byte within each line in reverse order.
-- Outputs the processed byte.
+- Echo the byte out
 
 ## Admin_Statistics.sh
 
